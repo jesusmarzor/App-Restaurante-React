@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+  
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Instalar dependencias
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Tests
+        env:
+          NEXT_PUBLIC_URL: ${{ secrets.URL }}
+        run: npm run test::github
