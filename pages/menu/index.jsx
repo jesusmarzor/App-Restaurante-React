@@ -3,12 +3,15 @@ import { useRouter } from "next/router";
 import getObjects from "services/getObjects"
 import { FoodList } from "components/FoodList";
 import {ButtonBack} from "components/ButtonBack";
+import { Button } from "components/Button";
 import { useState, useEffect } from "react";
 import { FormElement } from "components/FormElement";
 import { allAllergens, allSort } from "assets/constants";
+import { AuthConsumer } from "contexts/AuthContext";
 
 export default function Menu({menu}) {
   const router = useRouter();
+  const {user: authUser} = AuthConsumer();
   const [starters, setStarters] = useState(menu.filter( ({type}) => type === 'entrante'));
   const [mainCourses, setMainCourses] = useState(menu.filter( ({type}) => type === 'plato principal'));
   const [desserts, setDesserts] = useState(menu.filter( ({type}) => type === 'postre'));
@@ -78,6 +81,13 @@ export default function Menu({menu}) {
         <FoodList title="Platos principales" menu={mainCourses}/>
         <FoodList title="Postres" menu={desserts}/>          
       </div>
+      {
+        (authUser && authUser.role === "admin")
+        &&
+        <div className="flex flex-col justify-center items-center mt-5">
+          <Button href="menu/create" backgroundColor="bg-green-600">Crear Plato</Button>
+        </div>
+      }
     </>
   )
 }
